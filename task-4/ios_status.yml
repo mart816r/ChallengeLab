@@ -1,0 +1,30 @@
+---
+- name: Gather information about CSR1000v router
+  hosts: CSR1kv
+  connection: network_cli
+  gather_facts: no
+  vars:
+    ansible_network_os: ios
+
+  tasks:
+    - name: Show interfaces
+      ios_command:
+        commands:
+          - show interfaces
+      register: interfaces_output
+
+    - name: Save interfaces output to file
+      copy:
+        content: "{{ interfaces_output.stdout[0] }}"
+        dest: "./interfaces_output.txt"
+
+    - name: Show version
+      ios_command:
+        commands:
+          - show version
+      register: version_output
+
+    - name: Save version output to file
+      copy:
+        content: "{{ version_output.stdout[0] }}"
+        dest: "./version_output.txt"
